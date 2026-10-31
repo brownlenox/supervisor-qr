@@ -138,8 +138,9 @@ function pick(obj, name) {
 
 function buildQr(template, staffid, password) {
   return template
-    .replace(/\\r\\n/g, '\n')
+    .replace(/\\r\\n/g, '\r\n')
     .replace(/\\n/g, '\n')
+    .replace(/\\r/g, '\r')
     .replace(/\\t/g, '\t')
     .replace(/\{staffid\}/gi, () => staffid)
     .replace(/\{password\}/gi, () => password)
@@ -230,7 +231,7 @@ export function createApiHandler(env) {
         return send(res, 401, { error: INVALID })
       }
 
-      const template = env.QR_FORMAT || '{staffid}\\n{password}'
+      const template = env.QR_FORMAT || '{staffid}\\t{password}'
 
       return send(res, 200, {
         qr: buildQr(template, staffid, staffpass),
